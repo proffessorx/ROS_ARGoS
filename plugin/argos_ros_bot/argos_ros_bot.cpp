@@ -3,6 +3,8 @@
 #include "argos_bridge/PuckList.h"
 #include "argos_bridge/Proximity.h"
 #include "argos_bridge/ProximityList.h"
+#include "argos_bridge/Goal.h"
+#include "argos_bridge/GoalList.h"
 
 /* Include the controller definition */
 #include "argos_ros_bot.h"
@@ -48,11 +50,13 @@ CArgosRosBot::CArgosRosBot() :
 
 void CArgosRosBot::Init(TConfigurationNode& t_node) {
   // Create the topics to publish
-  stringstream puckListTopic, proximityTopic;
+  stringstream puckListTopic, proximityTopic, GoalTopic;
   puckListTopic << "/" << GetId() << "/puck_list";
   proximityTopic << "/" << GetId() << "/proximity";
+  GoalTopic  << "/" << GetId() << "/Goal";
   puckListPub = nodeHandle->advertise<PuckList>(puckListTopic.str(), 1);
   proximityPub = nodeHandle->advertise<ProximityList>(proximityTopic.str(), 1);
+  GoalListPub = nodeHandle->advertise<GoalList>(GoalTopic.str(), 1);
 
   // Create the subscribers
   stringstream cmdVelTopic;//, gripperTopic;
@@ -119,6 +123,7 @@ void CArgosRosBot::ControlStep() {
   }
 
   proximityPub.publish(proxList);
+  GoalListPub.publish(proxList);
 
   // Wait for any callbacks to be called.
   ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1));

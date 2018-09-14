@@ -79,9 +79,10 @@ private:
 
   // The following constant values were copied from the argos source tree from
   // the file src/plugins/robots/foot-bot/simulator/footbot_entity.cpp
-  static const Real HALF_BASELINE = 0.07f; // Half the distance between wheels
-  static const Real WHEEL_RADIUS = 0.029112741f;
-
+  //const changed to constexpr in below two lines..
+  static constexpr Real HALF_BASELINE = 0.07f; // Half the distance between wheels
+  static constexpr Real WHEEL_RADIUS = 0.029112741f;
+  
   /*
    * The following variables are used as parameters for the
    * algorithm. You can set their value in the <parameters> section
@@ -109,6 +110,9 @@ private:
 
   // Proximity sensor publisher
   ros::Publisher proximityPub;
+
+  // Goal list publisher
+  ros::Publisher GoalListPub;
 
   // Subscriber for cmd_vel (Twist message) topic.
   ros::Subscriber cmdVelSub;
