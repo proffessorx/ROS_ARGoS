@@ -50,6 +50,8 @@ add_message_files(
   PuckList.msg
   Proximity.msg
   ProximityList.msg
+  Goal.msg
+  GoalList.msg
 )
 
 ## Generate services in the 'srv' folder

@@ -50,13 +50,13 @@ CArgosRosBot::CArgosRosBot() :
 
 void CArgosRosBot::Init(TConfigurationNode& t_node) {
   // Create the topics to publish
-  stringstream puckListTopic, proximityTopic, GoalTopic;
+  stringstream puckListTopic, proximityTopic;
   puckListTopic << "/" << GetId() << "/puck_list";
   proximityTopic << "/" << GetId() << "/proximity";
-  GoalTopic  << "/" << GetId() << "/Goal";
+  //GoalTopic  << "/" << GetId() << "/Goal";
   puckListPub = nodeHandle->advertise<PuckList>(puckListTopic.str(), 1);
   proximityPub = nodeHandle->advertise<ProximityList>(proximityTopic.str(), 1);
-  GoalListPub = nodeHandle->advertise<GoalList>(GoalTopic.str(), 1);
+  //GoalListPub = nodeHandle->advertise<GoalList>(GoalTopic.str(), 1);
 
   // Create the subscribers
   stringstream cmdVelTopic;//, gripperTopic;
@@ -64,6 +64,12 @@ void CArgosRosBot::Init(TConfigurationNode& t_node) {
 //  gripperTopic << "/" << GetId() << "/gripper";
   cmdVelSub = nodeHandle->subscribe(cmdVelTopic.str(), 1, &CArgosRosBot::cmdVelCallback, this);
 //  gripperSub = nodeHandle->subscribe(gripperTopic.str(), 1, &CArgosRosBot::gripperCallback, this);
+
+  // Create the subscribers
+  stringstream GoalTopic;//, gripperTopic;
+  GoalTopic << "/" << GetId() << "/Goal";
+//  gripperTopic << "/" << GetId() << "/gripper";
+  GoalSub = nodeHandle->subscribe(GoalTopic.str(), 1, &CArgosRosBot::GoalCallback, this);
 
   // Get sensor/actuator handles
   m_pcWheels = GetActuator<CCI_DifferentialSteeringActuator>("differential_steering");
@@ -123,7 +129,7 @@ void CArgosRosBot::ControlStep() {
   }
 
   proximityPub.publish(proxList);
-  GoalListPub.publish(proxList);
+  //GoalListPub.publish(proxList);
 
   // Wait for any callbacks to be called.
   ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1));
@@ -150,6 +156,12 @@ void CArgosRosBot::cmdVelCallback(const geometry_msgs::Twist& twist) {
   leftSpeed = (v - HALF_BASELINE * w) / WHEEL_RADIUS;
   rightSpeed = (v + HALF_BASELINE * w) / WHEEL_RADIUS;
 
+  stepsSinceCallback = 0;
+}
+
+void CArgosRosBot::GoalCallback(const geometry_msgs::Twist& twist) {
+  cout << "GoalCallback: " << GetId() << endl;
+  ////////// the Goal Function////////
   stepsSinceCallback = 0;
 }
 

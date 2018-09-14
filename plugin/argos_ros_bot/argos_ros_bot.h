@@ -65,6 +65,8 @@ public:
    */
   void cmdVelCallback(const geometry_msgs::Twist& twist);
 
+  void GoalCallback(const geometry_msgs::Twist& twist);
+
   /*
    * The callback method for getting the desired state of the gripper.
    */
@@ -111,8 +113,8 @@ private:
   // Proximity sensor publisher
   ros::Publisher proximityPub;
 
-  // Goal list publisher
-  ros::Publisher GoalListPub;
+  // Goal list Subscriber
+  ros::Subscriber GoalSub;
 
   // Subscriber for cmd_vel (Twist message) topic.
   ros::Subscriber cmdVelSub;
