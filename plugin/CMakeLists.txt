@@ -47,3 +47,6 @@ link_directories(${ARGOS_LIBRARY_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/controllers)
 
 add_subdirectory(argos_ros_bot)
+add_subdirectory(footbot_gripping)
+add_subdirectory(footbot_manualcontrol)
+
