@@ -14,6 +14,14 @@
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h>
 #include <argos3/plugins/robots/generic/control_interface/ci_colored_blob_omnidirectional_camera_sensor.h>
 //#include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_gripper_actuator.h>
+/* Definition of the CCI_Controller class. */
+
+/* Definition of the LEDs actuator */
+#include <argos3/plugins/robots/generic/control_interface/ci_leds_actuator.h>
+/* Vector2 definitions */
+#include <argos3/core/utility/math/vector2.h>
+
+
 
 #include <ros/ros.h>
 #include <string>
@@ -63,10 +71,25 @@ public:
   /*
    * The callback method for getting new commanded speed on the cmd_vel topic.
    */
+
+  void Select();
+
+   /*
+    * Unsets the selected flag on this robot.
+    * When unselected, a robot stays still.
+    */
+  void Deselect();
+
+   /*
+    * Sets the control vector.
+    */
+  void SetControlVector(const CVector2& c_control);
+
   void cmdVelCallback(const geometry_msgs::Twist& twist);
 
   void GoalCallback(const geometry_msgs::Twist& twist);
 
+  /*
   /*
    * The callback method for getting the desired state of the gripper.
    */
@@ -121,6 +144,15 @@ private:
 
   // Subscriber for gripper (Bool message) topic.
 //  ros::Subscriber gripperSub;
+
+   /* Pointer to the LEDs actuator */
+   CCI_LEDsActuator* m_pcLEDs;
+
+   /* Flag to know whether this robot is selected */
+   bool m_bSelected;
+
+   /* The control vector */
+   CVector2 m_cControl;
 
 public:
   // We need only a single ROS node, although there are individual publishers

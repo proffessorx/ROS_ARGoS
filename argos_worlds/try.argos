@@ -39,6 +39,22 @@
       </params>
     </footbot_manualcontrol_controller>
 
+    <footbot_ros_controller id="frc" library="libargos_ros_bot.so" >
+      <actuators>
+        <differential_steering implementation="default" />
+        <leds implementation="default" medium="leds" />
+        <footbot_gripper implementation="default"/>
+        <footbot_turret implementation="default"/>
+      </actuators>
+      <sensors />
+      <params>
+        <wheel_turning hard_turn_angle_threshold="90"
+                       soft_turn_angle_threshold="70"
+                       no_turn_angle_threshold="10"
+                       max_speed="10" />
+      </params>
+    </footbot_ros_controller>
+
   </controllers>
 
   <!-- *********************** -->
@@ -91,6 +107,18 @@
       </entity>
     </distribute>
 
+    <distribute>
+      <position method="uniform" min="-0.25,-1,0" max="0.25,1,0"/>
+      <orientation method="constant" values="0,0,0"/>
+
+      <entity quantity="1" max_trials="100">
+
+        <foot-bot id="bot3">
+          <controller config="frc"/>
+        </foot-bot>
+
+      </entity>
+    </distribute>
 
     <!--
 	Two different types of pucks follow.  Both types are moveable cylinders with an LED

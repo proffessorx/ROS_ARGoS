@@ -49,4 +49,5 @@ include_directories(${CMAKE_SOURCE_DIR}/controllers)
 add_subdirectory(argos_ros_bot)
 add_subdirectory(footbot_gripping)
 add_subdirectory(footbot_manualcontrol)
+add_subdirectory(footbot_ros)
 

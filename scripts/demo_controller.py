@@ -12,6 +12,8 @@ from argos_bridge.msg import Puck
 from argos_bridge.msg import PuckList
 from argos_bridge.msg import Proximity
 from argos_bridge.msg import ProximityList
+from argos_bridge.msg import Goal
+from argos_bridge.msg import GoalList
 from geometry_msgs.msg import Twist
 
 class DemoController:

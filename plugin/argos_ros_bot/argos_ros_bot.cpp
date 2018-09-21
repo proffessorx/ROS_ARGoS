@@ -12,6 +12,7 @@
 #include <argos3/core/utility/configuration/argos_configuration.h>
 /* 2D vector definition */
 #include <argos3/core/utility/math/vector2.h>
+#include <argos3/core/utility/logging/argos_log.h>
 
 #include <iostream>
 #include <sstream>
@@ -143,7 +144,23 @@ void CArgosRosBot::ControlStep() {
   }
 
   m_pcWheels->SetLinearVelocity(leftSpeed, rightSpeed);
+
 }
+/****************************************/
+/****************************************/ 
+
+void CArgosRosBot::Select() {
+   m_bSelected = true;
+   m_pcLEDs->SetAllColors(CColor::RED);
+}
+
+void CArgosRosBot::Deselect() {
+   m_bSelected = false;
+   m_pcLEDs->SetAllColors(CColor::BLACK);
+}
+
+/****************************************/
+/****************************************/
 
 void CArgosRosBot::cmdVelCallback(const geometry_msgs::Twist& twist) {
   cout << "cmdVelCallback: " << GetId() << endl;
