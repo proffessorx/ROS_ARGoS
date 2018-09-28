@@ -16,7 +16,6 @@
 
 #include <iostream>
 #include <sstream>
-
 #include <ros/callback_queue.h>
 
 using namespace std;

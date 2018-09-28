@@ -15,8 +15,6 @@
     <argos_ros_bot_controller id="argos_ros_bot" library="libargos_ros_bot.so">
       <actuators>
         <differential_steering implementation="default"/>
-        <footbot_gripper implementation="default"/>
-        <footbot_turret implementation="default"/>
       </actuators>
       <sensors>
         <footbot_proximity implementation="default" show_rays="true"/>
@@ -39,14 +37,15 @@
       </params>
     </footbot_manualcontrol_controller>
 
-    <footbot_ros_controller id="frc" library="libargos_ros_bot.so" >
+    <footbot_ros_controller id="frc" library="build/controllers/footbot_manualcontrol/libfootbot_manualcontrol" >
       <actuators>
         <differential_steering implementation="default" />
         <leds implementation="default" medium="leds" />
-        <footbot_gripper implementation="default"/>
-        <footbot_turret implementation="default"/>
       </actuators>
-      <sensors />
+      <sensors>
+        <footbot_proximity implementation="default" show_rays="true"/>
+        <colored_blob_omnidirectional_camera implementation="rot_z_only" medium="leds" show_rays="true"/>
+      </sensors>
       <params>
         <wheel_turning hard_turn_angle_threshold="90"
                        soft_turn_angle_threshold="70"

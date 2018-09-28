@@ -24,6 +24,7 @@ class DemoController:
     time = 0
     stateStartTime = 0
     lastTwist = None
+    Goal = None
     
     # Constants
     MAX_FORWARD_SPEED = 1
@@ -31,6 +32,7 @@ class DemoController:
 
     def __init__(self):
         self.cmdVelPub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
+        self.Goal = rospy.Publisher('Goal', Twist, queue_size=1)
         rospy.Subscriber('puck_list', PuckList, self.pucks_callback)
         rospy.Subscriber('proximity', ProximityList, self.prox_callback)
 
@@ -105,6 +107,8 @@ class DemoController:
             die("Error: Invalid state")
         
         self.cmdVelPub.publish(twist)
+        self.lastTwist = twist
+        self.Goal.publish(twist)
         self.lastTwist = twist
 
     def transition(self, newState):
