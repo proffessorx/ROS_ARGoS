@@ -21,8 +21,6 @@
 using namespace std;
 using namespace argos_bridge;
 
-// Initialize ROS node.  There will be only one ROS node no matter how many robots are created in
-// ARGoS.  However, we will have one instance of the CArgosRosBot class for each ARGoS robot.
 ros::NodeHandle* initROS() {
   int argc = 0;
   char *argv = (char *) "";
@@ -39,12 +37,10 @@ CArgosRosBot::CArgosRosBot() :
   m_pcWheels(NULL),
   m_pcProximity(NULL),
   m_pcOmniCam(NULL),
-//  m_pcGripper(NULL),
   stopWithoutSubscriberCount(10),
   stepsSinceCallback(0),
   leftSpeed(0),
-  rightSpeed(0)//,
-//  gripping(false)
+  rightSpeed(0)
 {
 }
 
@@ -61,14 +57,12 @@ void CArgosRosBot::Init(TConfigurationNode& t_node) {
   // Create the subscribers
   stringstream cmdVelTopic;//, gripperTopic;
   cmdVelTopic << "/" << GetId() << "/cmd_vel";
-//  gripperTopic << "/" << GetId() << "/gripper";
   cmdVelSub = nodeHandle->subscribe(cmdVelTopic.str(), 1, &CArgosRosBot::cmdVelCallback, this);
-//  gripperSub = nodeHandle->subscribe(gripperTopic.str(), 1, &CArgosRosBot::gripperCallback, this);
+
 
   // Create the subscribers
   stringstream GoalTopic;//, gripperTopic;
   GoalTopic << "/" << GetId() << "/Goal";
-//  gripperTopic << "/" << GetId() << "/gripper";
   GoalSub = nodeHandle->subscribe(GoalTopic.str(), 1, &CArgosRosBot::GoalCallback, this);
 
   // Get sensor/actuator handles
@@ -79,13 +73,6 @@ void CArgosRosBot::Init(TConfigurationNode& t_node) {
 
   m_pcOmniCam->Enable();
 
-  /*
-   * Parse the configuration file
-   *
-   * The user defines this part. Here, the algorithm accepts three
-   * parameters and it's nice to put them in the config file so we don't
-   * have to recompile if we want to try other settings.
-   */
   GetNodeAttributeOrDefault(t_node, "stopWithoutSubscriberCount", stopWithoutSubscriberCount, stopWithoutSubscriberCount);
 }
 
@@ -102,9 +89,6 @@ void CArgosRosBot::ControlStep() {
     Puck puck;
     puck.type = (camReads.BlobList[i]->Color == CColor::RED);
     puck.range = camReads.BlobList[i]->Distance;
-    // Make the angle of the puck in the range [-PI, PI].  This is useful for
-    // tasks such as homing in on a puck using a simple controller based on
-    // the sign of this angle.
     puck.angle = camReads.BlobList[i]->Angle.SignedNormalize().GetValue();
     puckList.pucks.push_back(puck);
   }
@@ -181,34 +165,4 @@ void CArgosRosBot::GoalCallback(const geometry_msgs::Twist& twist) {
   stepsSinceCallback = 0;
 }
 
-/*
-void CArgosRosBot::gripperCallback(const std_msgs::Bool& value) {
-  cout << "gripperCallback: " << GetId() << endl;
-
-  if (gripping && !value.data) {
-    // Release the gripper
-    m_pcGripper->Unlock();
-    gripping = true;
-  }
-
-  if (!gripping && value.data) {
-    // Activate gripper
-    m_pcGripper->LockPositive();
-    gripping = false;
-  }
-
-  stepsSinceCallback = 0;
-}
-*/
-
-/*
-* This statement notifies ARGoS of the existence of the controller.
-* It binds the class passed as first argument to the string passed as
-* second argument.
-* The string is then usable in the configuration file to refer to this
-* controller.
- * When ARGoS reads that string in the configuration file, it knows which
- * controller class to instantiate.
- * See also the configuration files for an example of how this is used.
- */
 REGISTER_CONTROLLER(CArgosRosBot, "argos_ros_bot_controller")

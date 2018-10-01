@@ -111,13 +111,11 @@ void CFootBotros::ControlStep() {
    const CCI_ColoredBlobOmnidirectionalCameraSensor::SReadings& camReads = m_pcOmniCam->GetReadings();
   PuckList puckList;
   puckList.n = camReads.BlobList.size();
+
   for (size_t i = 0; i < puckList.n; ++i) {
     Puck puck;
     puck.type = (camReads.BlobList[i]->Color == CColor::RED);
     puck.range = camReads.BlobList[i]->Distance;
-    // Make the angle of the puck in the range [-PI, PI].  This is useful for
-    // tasks such as homing in on a puck using a simple controller based on
-    // the sign of this angle.
     puck.angle = camReads.BlobList[i]->Angle.SignedNormalize().GetValue();
     puckList.pucks.push_back(puck);
   }
